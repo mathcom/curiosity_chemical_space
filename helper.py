@@ -140,7 +140,7 @@ def plot_live_hist(rewards, i_episode, window_id=5, n_bins=10, title=''):
 
 
 ##################################################### START CONVERSION HELPER #####################################################
-alphabet = ['[#N]'] + selfies_alphabet() + ['[STOP]']
+alphabet = ['[#N]'] + list(selfies_alphabet()) + ['[STOP]']
 alphabet_size = len(alphabet)
 alphabet_dict = {character: i for i, character in enumerate(alphabet)}
 
