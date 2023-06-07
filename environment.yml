@@ -1,0 +1,16 @@
+name: curiosity
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - cudatoolkit=10.2
+  - pytorch::pytorch=1.8.1=*cuda*
+  - pytorch::torchvision
+  - rdkit::rdkit=2020.09.1
+  - jupyter
+  - numpy
+  - pip
+  - pip:
+    - selfies==0.2.4
+    - matplotlib
+    - pandas
