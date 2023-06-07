@@ -31,7 +31,9 @@ def get_fingerprint(smile, radius, bits):
 
 
 # Celecoxib
-fp1 = Chem.GetMorganFingerprint(Chem.MolFromSmiles('CC1=CC=C(C=C1)C1=CC(=NN1C1=CC=C(C=C1)S(N)(=O)=O)C(F)(F)F'), 2)
+smi_celecoxib = 'CC1=CC=C(C=C1)C1=CC(=NN1C1=CC=C(C=C1)S(N)(=O)=O)C(F)(F)F'
+sel_celecoxib = encoder(smi_celecoxib) # '[C][C][=C][C][=C][Branch1_3][Branch1_1][C][=C][Ring1][Branch1_1][C][=C][C][Branch2_3][epsilon][Ring2][=N][N][Ring1][Ring2][C][=C][C][=C][Branch1_3][Branch1_1][C][=C][Ring1][Branch1_1][S][Branch1_2][epsilon][N][Branch1_1][epsilon][=O][=O][C][Branch1_2][epsilon][F][Branch1_3][epsilon][F][F]'
+fp1 = Chem.GetMorganFingerprint(Chem.MolFromSmiles(smi_celecoxib), 2)
 
 
 def calculate_score(smiles, mol, scoring_fnc='PLOGP'):
@@ -111,14 +113,12 @@ class ChemEnv(object):
         self.done = False
         self.done_intern = False
 
-
         self.state_string = '[C]'  # '[START PROXY]'
-
+        
         if self.scoring_fnc == 'PLOGP':
             self.state_string = '[START PROXY]'  # '[S]'
-        if self.scoring_fnc == 'SIMILARITY':
-            self.state_string = encoder('CC1=CC=C(C=C1)C1=CC(=NN1C1=CC=C(C=C1)S(N)(=O)=O)C(F)(F)F').split(']')[
-                                    0] + ']'  # start with correct first symbol
+        #if self.scoring_fnc == 'SIMILARITY':
+        #    self.state_string = sel_celecoxib.split(']')[0] + ']'  # start with correct first symbol
 
         if self.state_string == '[START PROXY]':
             # start proxies one hot encoding is all 0
@@ -131,9 +131,7 @@ class ChemEnv(object):
             self.state = helper.selfie_string_to_one_hot(self.state_string)
             self.smiles_state_string = decoder(self.state_string)
             self.molecule = Chem.MolFromSmiles(self.smiles_state_string)
-
-            self.old_reward_total = calculate_score(self.smiles_state_string, self.molecule,
-                                                    scoring_fnc=self.scoring_fnc)
+            self.old_reward_total = calculate_score(self.smiles_state_string, self.molecule, scoring_fnc=self.scoring_fnc)
         return self.state
 
     def step(self, action):
@@ -167,8 +165,10 @@ class ChemEnv(object):
         ###################################################################################################
         ############################################ CALCULATE REWARD #####################################
         ###################################################################################################
-        stop_condition = action_symbol == '[STOP]' or is_finished(self.state_string) or len(
-            self.state) >= self.max_string_length or molecule is None
+        stop_condition = action_symbol == '[STOP]'
+        stop_condition = stop_condition or is_finished(self.state_string)
+        stop_condition = stop_condition or len(self.state) >= self.max_string_length
+        stop_condition = stop_condition or molecule is None
 
         if stop_condition:
 
@@ -491,9 +491,10 @@ class IntrinsicRewardChemParallel(object):
 
         self.prediction_network_optim.zero_grad()
 
-        return states_one_hot, last_idx_list, rewards.to(
-            torch.float32).detach().cpu().numpy(), dones, infos, targets, np.mean(
-            intrinsic_reward.detach().cpu().numpy())
+        return states_one_hot, last_idx_list, \
+            rewards.to(torch.float32).detach().cpu().numpy(), \
+            dones, infos, targets, \
+            np.mean(intrinsic_reward.detach().cpu().numpy())
 
     def render(self, mode=None, force_render=False, n=1):
         for i, env in enumerate(self.envs):
