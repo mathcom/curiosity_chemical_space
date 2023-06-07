@@ -113,8 +113,21 @@ def main(job_id, intrinsic_reward_weight, do_plot, intrinsic_reward_type,
             print('\nEpisode ', episode)
             time1 = time.time()
 
-            state_batch, last_idx_list_all, idx_batch, action_batch, idx_probs_unmasked, idx_probs_masked, action_probs_unmasked, action_probs_masked, encoded_states_batch, state_values_batch, reward_batch, molecule_property_batch, dones_list, curiosity_error = env_handler.sample_env_trajectories_parallel(
-                env, ppo, batch_size, device, i_episode=episode)
+            _outputs = env_handler.sample_env_trajectories_parallel(env, ppo, batch_size, device, i_episode=episode)
+            state_batch             = _outputs[0]
+            last_idx_list_all       = _outputs[1]
+            idx_batch               = _outputs[2]
+            action_batch            = _outputs[3]
+            idx_probs_unmasked      = _outputs[4]
+            idx_probs_masked        = _outputs[5]
+            action_probs_unmasked   = _outputs[6]
+            action_probs_masked     = _outputs[7]
+            encoded_states_batch    = _outputs[8]
+            state_values_batch      = _outputs[9]
+            reward_batch            = _outputs[10]
+            molecule_property_batch = _outputs[11]
+            dones_list              = _outputs[12]
+            curiosity_error         = _outputs[13]
 
             state_batch_c = list(state_batch)
             for i in range(batch_size):
@@ -230,7 +243,7 @@ if __name__ == '__main__':
     parser.add_argument('--curiosity_buffer_size', default=1000)
     parser.add_argument('--fingerprint_bits', default=256)
     parser.add_argument('--fingerprint_radius', default=2)
-    parser.add_argument('--lsh_bits', default=16)
+    parser.add_argument('--lsh_bits', default=32)
     parser.add_argument('--num_episodes', default=3000)
 
     args = parser.parse_args()
