@@ -348,10 +348,9 @@ class PPOAgent(BasicAgent):
                     self.loss = -torch.mean( torch.min(surr1.squeeze(), surr2.squeeze()) + self.entropy_weight*(m_action.entropy().squeeze())) + 0.5*self.MseLoss(state_values_batch.squeeze(), reward_batch.squeeze())
                     
                 
-                print('LOSS: ', self.loss)    
+                print('LOSS: ', self.loss.item())    
                 super()._optimize()
                 
 
         
         
-
