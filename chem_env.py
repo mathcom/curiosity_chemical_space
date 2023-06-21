@@ -14,9 +14,18 @@ import matplotlib.pyplot as plt
 import torch.optim as optim
 import torch
 from score_functions import calculate_pLogP
+from score_functions import calculateScore as calculate_sa
 from rdkit.DataStructs.cDataStructs import TanimotoSimilarity
 import config
 import pickle
+from tdc import Oracle
+
+import time
+
+## TDC oracle - https://tdcommons.ai/functions/oracles/
+calculate_drd2  = Oracle(name='DRD2')
+calculate_gsk3b = Oracle(name='GSK3B')
+calculate_jnk3  = Oracle(name='JNK3')
 
 
 def get_fingerprint(smile, radius, bits):
@@ -38,7 +47,7 @@ fp1 = Chem.GetMorganFingerprint(Chem.MolFromSmiles(smi_celecoxib), 2)
 
 def calculate_score(smiles, mol, scoring_fnc='PLOGP'):
     if scoring_fnc == 'QED':
-        # QED
+        # QED (Quantitative Estimate of Drug-likeness)
         score = rdkit.Chem.QED.qed(mol)
 
     elif scoring_fnc == 'PLOGP':
@@ -51,6 +60,38 @@ def calculate_score(smiles, mol, scoring_fnc='PLOGP'):
         # SIMILARITY
         fp2 = Chem.GetMorganFingerprint(mol, 2)
         score = TanimotoSimilarity(fp1, fp2)
+
+    elif scoring_fnc == 'DRD2':
+        # TDC - Dopamine Receptor D2
+        score = calculate_drd2([smiles,])[0]
+
+    elif scoring_fnc == 'GSK3B':
+        # TDC - Glycogen Synthase Kinase 3 Beta
+        score = calculate_gsk3b([smiles,])[0]
+        
+    elif scoring_fnc == 'JNK3':
+        # TDC - c-Jun N-terminal Kinases-3
+        score = calculate_jnk3([smiles,])[0]
+        
+    elif scoring_fnc == 'GSK3B+JNK3':
+        # TDC - Multi-objective optimization
+        score = 0.5 * (calculate_gsk3b([smiles,])[0] + calculate_jnk3([smiles,])[0])
+        
+    elif scoring_fnc == 'DRD2+QED+SA':
+        # TDC - Multi-objective optimization
+        score = 0.3334 * (calculate_drd2([smiles,])[0] + rdkit.Chem.QED.qed(mol) - 0.1 * (10 - calculate_sa(mol)))
+    
+    elif scoring_fnc == 'GSK3B+QED+SA':
+        # TDC - Multi-objective optimization
+        score = 0.3334 * (calculate_gsk3b([smiles,])[0] + rdkit.Chem.QED.qed(mol) - 0.1 * (10 - calculate_sa(mol)))
+
+    elif scoring_fnc == 'JNK3+QED+SA':
+        # TDC - Multi-objective optimization
+        score = 0.3334 * (calculate_jnk3([smiles,])[0] + rdkit.Chem.QED.qed(mol) - 0.1 * (10 - calculate_sa(mol)))
+        
+    elif scoring_fnc == 'GSK3B+JNK3+QED+SA':
+        # TDC - Multi-objective optimization
+        score = 0.25 * (calculate_gsk3b([smiles,])[0] + calculate_jnk3([smiles,])[0] + rdkit.Chem.QED.qed(mol) - 0.1 * (10 - calculate_sa(mol)))
 
     return score
 
@@ -115,7 +156,7 @@ class ChemEnv(object):
 
         self.state_string = '[C]'  # '[START PROXY]'
         
-        if self.scoring_fnc == 'PLOGP':
+        if self.scoring_fnc in {'PLOGP', 'DRD2', 'GSK3B', 'JNK3'}:
             self.state_string = '[START PROXY]'  # '[S]'
         #if self.scoring_fnc == 'SIMILARITY':
         #    self.state_string = sel_celecoxib.split(']')[0] + ']'  # start with correct first symbol
@@ -401,10 +442,12 @@ class IntrinsicRewardChemParallel(object):
         ################################# EXECUET ACTION #################################
         ##################################################################################
         # convert tuple of list to list of tuple
+        print('[DEBUG] 001'); start_time = time.time()
         idxs, actions = actions
         actions = [(idxs[i], actions[i]) for i in range(0, len(actions))]
         for i in range(self.n_envs):
             # state one hot is a list (hold by each environment) of the length of its selfie string
+
             state_one_hot, target, done, info = self.envs[i].step(actions[i])
             states_one_hot.append(state_one_hot)
             targets.append(torch.tensor(target).to(torch.float32))
@@ -428,7 +471,7 @@ class IntrinsicRewardChemParallel(object):
                 if self.do_plot:
                     self.envs[i].render(force_render=True, title='BEST SAMPLE: {}   {}'.format(
                         float(np.around(self.best_target, decimals=2)), self.envs[i].state_string))
-
+        print(f'[DEBUG] 005  ({time.time() - start_time:.3f} sec)')
         last_idx_list = torch.tensor([len(state_one_hot) - 1 for state_one_hot in states_one_hot]).to(config.device)
         targets = torch.stack(targets).to(config.device)
         states_one_hot = [torch.FloatTensor(state_one_hot) for state_one_hot in states_one_hot]
@@ -480,7 +523,7 @@ class IntrinsicRewardChemParallel(object):
         ##################################################################################
         ################################# COMPOSE REWARD #################################
         ##################################################################################
-
+        print(f'[DEBUG] 006  ({time.time() - start_time:.3f} sec)')
         reward_total = targets
 
         self.old_reward_total = self.old_reward_total.to(config.device)
@@ -490,7 +533,7 @@ class IntrinsicRewardChemParallel(object):
         rewards += self.intrinsic_reward_weight * intrinsic_reward
 
         self.prediction_network_optim.zero_grad()
-
+        print(f'[DEBUG] 007  ({time.time() - start_time:.3f} sec)')
         return states_one_hot, last_idx_list, \
             rewards.to(torch.float32).detach().cpu().numpy(), \
             dones, infos, targets, \

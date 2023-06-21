@@ -6,11 +6,17 @@ dependencies:
   - cudatoolkit=10.2
   - pytorch::pytorch=1.8.1=*cuda*
   - pytorch::torchvision
-  - rdkit::rdkit=2020.09.1
-  - jupyter
-  - numpy
+#  - rdkit::rdkit=2020.09.1
   - pip
   - pip:
     - selfies==0.2.4
+    - rdkit-pypi==2022.9.5
+    - scikit-learn==1.0.2
+    - scipy==1.7.3
+    - networkx==2.6.3
+    - PyTDC==0.4.0
+    - numpy
+    - jupyter
     - matplotlib
+    - seaborn
     - pandas

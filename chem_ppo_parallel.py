@@ -231,7 +231,7 @@ if __name__ == '__main__':
     parser.add_argument('--plot', default=False)
     parser.add_argument('--results_directory', default='results')
     parser.add_argument('--intrinsic_reward_type', default=None, choices=['COUNTING', 'MEMORY', 'PREDICTION'])
-    parser.add_argument('--scoring_fnc', default='PLOGP', choices=['PLOGP', 'QED', 'SIMILARITY'])
+    parser.add_argument('--scoring_fnc', default='PLOGP', choices=['PLOGP', 'QED', 'SIMILARITY', 'DRD2', 'GSK3B', 'JNK3', 'GSK3B+JNK3', 'DRD2+QED+SA', 'GSK3B+QED+SA', 'JNK3+QED+SA', 'GSK3B+JNK3+QED+SA'])
     parser.add_argument('--max_string_length', default=35)
     parser.add_argument('--discount_factor', default=1)
     parser.add_argument('--batch_size', default=128)

@@ -26,26 +26,54 @@ For the different reward types this should reproduce molecules similar to these 
 ## Reproducibility
 PLOGP
 ```bash
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_weight 0.0 --entropy_weight 0.02 
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.1 --entropy_weight 0.02
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.1 --entropy_weight 0.02
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.1 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_weight 0.0 --entropy_weight 0.02 
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.1 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.1 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc PLOGP --max_string_length 35 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.1 --entropy_weight 0.02
 ```
 QED
 ```bash
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_weight 0.0 --entropy_weight 0.02 
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.075 --entropy_weight 0.02
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.075 --entropy_weight 0.02
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.125 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_weight 0.0 --entropy_weight 0.02 
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.075 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.075 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc QED --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.125 --entropy_weight 0.02
 ```
 SIMILARITY
 ```bash
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.03 --entropy_weight 0.01
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.04 --entropy_weight 0.01
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_weight 0.0 --entropy_weight 0.01
-python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 128 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.01 --entropy_weight 0.01
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_weight 0.0 --entropy_weight 0.01
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.0 --entropy_weight 0.01
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.01 --entropy_weight 0.01
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.0 --entropy_weight 0.01
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.01 --entropy_weight 0.01
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.0 --entropy_weight 0.01
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc SIMILARITY --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.04 --entropy_weight 0.01
 ```
-
+GSK3B
+```bash
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B --max_string_length 50 --intrinsic_reward_weight 0.0 --entropy_weight 0.02 
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.075 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.075 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.125 --entropy_weight 0.02
+```
+GSK3B+QED+SA
+```bash
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B+QED+SA --max_string_length 50 --intrinsic_reward_weight 0.0 --entropy_weight 0.02 
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B+QED+SA --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B+QED+SA --max_string_length 50 --intrinsic_reward_type COUNTING --intrinsic_reward_weight 0.075 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B+QED+SA --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B+QED+SA --max_string_length 50 --intrinsic_reward_type MEMORY --intrinsic_reward_weight 0.075 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B+QED+SA --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.0 --entropy_weight 0.02
+python chem_ppo_parallel.py --id 0 --num_episodes 1000 --batch_size 64 --lsh_bits 32 --scoring_fnc GSK3B+QED+SA --max_string_length 50 --intrinsic_reward_type PREDICTION --intrinsic_reward_weight 0.125 --entropy_weight 0.02
+```
 ----
 ## Citation
 ```
